@@ -5,6 +5,7 @@ import com.laba.OrderService.dto.ProductInfoResponseDto;
 import com.laba.OrderService.dto.UserInfoResponseDto;
 import com.laba.OrderService.entity.Order;
 import com.laba.OrderService.entity.OrderProduct;
+import com.laba.OrderService.enums.OrderState;
 import com.laba.OrderService.exception.BusinessException;
 import com.laba.OrderService.exception.GeneralException;
 import com.laba.OrderService.feign.UserFeignClient;
@@ -71,13 +72,14 @@ public class OrderService {
         Order order = new Order();
         order.setOrderDescription(orderDescription);
         order.setOrderNumber(UUID.randomUUID().toString());
+        order.setOrderState(OrderState.SUSPEND);
 
         UserInfoResponseDto userDto = userClient.getInfo(userId);
         order.setUserId(userDto.id());
 
-        orderProductService.saveOrderProduct(productIdList, order);
+    //    orderProductService.saveOrderProduct(productIdList, order);
 
-      //  mailService.sendMailUser(order, null);
+        mailService.sendMailUser(order, userDto);
 
         getCargoOffer(order, userDto);
 
@@ -156,5 +158,13 @@ public class OrderService {
         Order order = orderRepository.findById(orderID).get();
         orderRepository.delete(order);
 
+    }
+
+    public Order findOrderByOrderNumber(String orderNumber){
+        return orderRepository.findByOrderNumber(orderNumber);
+    }
+
+    public void saveOrder(Order order){
+        orderRepository.save(order);
     }
 }

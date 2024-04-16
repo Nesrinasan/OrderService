@@ -1,5 +1,6 @@
 package com.laba.OrderService.entity;
 
+import com.laba.OrderService.enums.OrderState;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -29,5 +30,7 @@ public class Order extends BaseEntity implements Serializable {
 //	private Users users;
 
 	private Long userId;
+
+	private OrderState orderState;
 
 }

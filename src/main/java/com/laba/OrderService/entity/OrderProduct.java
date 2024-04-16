@@ -1,5 +1,6 @@
 package com.laba.OrderService.entity;
 
+import com.laba.OrderService.enums.OrderState;
 import jakarta.persistence.*;
 
 @Table
@@ -22,6 +23,7 @@ public class OrderProduct {
     private Order order;
 
     private String orderProductDesc;
+    private OrderState orderState;
 
     public Long getId() {
         return id;
@@ -53,5 +55,13 @@ public class OrderProduct {
 
     public void setOrderProductDesc(String orderProductDesc) {
         this.orderProductDesc = orderProductDesc;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 }
