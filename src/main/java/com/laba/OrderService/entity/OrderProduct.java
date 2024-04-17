@@ -23,6 +23,7 @@ public class OrderProduct {
     private Order order;
 
     private String orderProductDesc;
+    @Enumerated(EnumType.STRING)
     private OrderState orderState;
 
     public Long getId() {

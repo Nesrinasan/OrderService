@@ -77,7 +77,7 @@ public class OrderService {
         UserInfoResponseDto userDto = userClient.getInfo(userId);
         order.setUserId(userDto.id());
 
-    //    orderProductService.saveOrderProduct(productIdList, order);
+        orderProductService.saveOrderProduct(productIdList, order);
 
         mailService.sendMailUser(order, userDto);
 

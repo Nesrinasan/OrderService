@@ -1,4 +1,4 @@
-package com.laba.OrderService.service.kafka;
+package com.laba.OrderService.service.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
-public class KafkaMailService {
+public class MailServiceProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
@@ -21,7 +21,7 @@ public class KafkaMailService {
     @Value("${topic.mail}")
     private String mailTopic;
 
-    public KafkaMailService(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public MailServiceProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }

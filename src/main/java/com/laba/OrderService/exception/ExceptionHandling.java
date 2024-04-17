@@ -15,4 +15,9 @@ public class ExceptionHandling {
     }
 
 
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<String> businessExceptionHandler(UserException userException){
+        return new ResponseEntity<>( userException.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

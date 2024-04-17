@@ -1,4 +1,4 @@
-package com.laba.OrderService.service.kafka;
+package com.laba.OrderService.service.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,23 +13,26 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
-public class KafkaORderService {
+public class ProductServiceProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    @Value("${topic.createOrder}")
-    private String createOrderTopic;
+    @Value("${topic.stock.update}")
+    private String stockUpdateTopic;
 
-    public KafkaORderService(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    @Value("${topic.stock.update.fail.shipment}")
+    private String stockUpdateFailShipmentTopic;
+
+    public ProductServiceProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessageKafka(CreateOrderDto createOrderDto){
+    public void sendMessageKafkaStockUpdate(CreateOrderDto createOrderDto){
         String valueAsString = null;
         try {
             valueAsString = objectMapper.writeValueAsString(createOrderDto);
-            CompletableFuture<SendResult<String, String>> sendResultCompletableFuture = kafkaTemplate.send(createOrderTopic, valueAsString);
+            CompletableFuture<SendResult<String, String>> sendResultCompletableFuture = kafkaTemplate.send(stockUpdateTopic, valueAsString);
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null) {
                     System.out.println("Sent message=[" + createOrderDto.orderNumber() +
@@ -47,4 +50,25 @@ public class KafkaORderService {
         }
 
     }
+    public void sendMessageKafkaStockKontroFail(String productId){
+
+        try {
+
+            CompletableFuture<SendResult<String, String>> sendResultCompletableFuture = kafkaTemplate.send(stockUpdateFailShipmentTopic, productId);
+            sendResultCompletableFuture.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("Sent message=[" + productId +
+                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                } else {
+                    System.out.println("Unable to send message=[" +
+                            productId + "] due to : " + ex.getMessage());
+                }
+            });
+
+        }catch (Exception e){
+            log.error("Message is not sent ", e);
+        }
+
+    }
+
 }
